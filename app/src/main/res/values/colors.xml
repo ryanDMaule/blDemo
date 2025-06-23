@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1F7A8C</color>
+    <color name="pastel_blue">#C6E1FE</color>
+    <color name="pastel_green">#C7ECC2</color>
+    <color name="pastel_purple">#E7CDFC</color>
+    <color name="pastel_red">#FCCDCD</color>
+    <color name="gray">#C9C9C9</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
