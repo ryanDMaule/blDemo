@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mauleco.bl.data.local.entity.ActivityLog
 import com.mauleco.bl.ui.theme.viewModel.MainViewModel
 import com.mauleco.bl.utils.GeneralUtils.calculateAverageReps
 import com.mauleco.bl.utils.GeneralUtils.calculateAverageTime
@@ -26,17 +27,24 @@ private val sessionTypeToActivityType = mapOf(
 
 @Composable
 fun StatsSection(
-    modifier: Modifier = Modifier,
-    vm: MainViewModel = viewModel()
+    activityLogs: List<ActivityLog>,
+    selectedSession: String,
+    onSessionSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val selectedSession by vm.selectedSessionType
-    val allLogs by vm.activityLogs
+    val sessionTypeToActivityType = mapOf(
+        "All" to null,
+        "Assisted" to "ASSIST_MODE",
+        "Manual" to "MANUAL_MODE",
+        "Passive" to "PASSIVE_MODE",
+        "Game" to "GAME_MODE"
+    )
 
     val filteredLogs = if (selectedSession == "All") {
-        allLogs
+        activityLogs
     } else {
         val activityType = sessionTypeToActivityType[selectedSession]
-        allLogs.filter { it.activityType == activityType }
+        activityLogs.filter { it.activityType == activityType }
     }
 
     val avgTime = remember(filteredLogs) { calculateAverageTime(filteredLogs) }
@@ -70,10 +78,7 @@ fun StatsSection(
                     label = type,
                     backgroundColorRes = getColorForSession(type),
                     isSelected = (selectedSession == type),
-                    onClick = {
-                        Log.d("SessionSelectorCard", "Clicked: $type")
-                        vm.setSelectedSessionType(type)
-                              },
+                    onClick = { onSessionSelected(type) },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
