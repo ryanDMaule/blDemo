@@ -12,13 +12,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mauleco.bl.R
 import com.mauleco.bl.ui.theme.viewModel.MainViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @Composable
-fun DashboardScreen(vm: MainViewModel = viewModel()) {
+fun DashboardScreen(vm: MainViewModel = hiltViewModel()) {
     val selectedSession by vm.selectedSessionType
     val allLogs by vm.activityLogs
     val patient by vm.patient

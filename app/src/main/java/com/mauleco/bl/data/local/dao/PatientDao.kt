@@ -10,4 +10,8 @@ interface PatientDao {
 
     @Query("SELECT * FROM patients WHERE patientId = :id")
     suspend fun getPatientById(id: String): Patient?
+
+    @Query("SELECT COUNT(*) FROM patients")
+    suspend fun count(): Int
+
 }

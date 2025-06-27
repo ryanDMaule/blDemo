@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
+    id("kotlin-android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.android")
 }
 
@@ -82,4 +84,8 @@ dependencies {
 
     implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
 
+    // Hilt dependencies
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-compiler:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
