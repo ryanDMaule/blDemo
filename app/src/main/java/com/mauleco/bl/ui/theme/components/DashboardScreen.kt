@@ -21,27 +21,24 @@ import androidx.compose.ui.unit.dp
 import com.mauleco.bl.R
 import com.mauleco.bl.ui.theme.viewModel.MainViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 
 @Composable
 fun DashboardScreen(vm: MainViewModel = hiltViewModel()) {
-    val selectedSession by vm.selectedSessionType
-    val isLoading by vm.isLoading
-    val errorMessage by vm.errorMessage
-    val allLogs by vm.activityLogs
-    val patient by vm.patient
+    val uiState by vm.uiState.collectAsStateWithLifecycle()
 
     when {
-        isLoading -> {
+        uiState.isLoading -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
 
-        errorMessage != null -> {
+        uiState.errorMessage != null -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = errorMessage ?: "Unknown error",
+                    text = uiState.errorMessage ?: "Unknown error",
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -60,7 +57,7 @@ fun DashboardScreen(vm: MainViewModel = hiltViewModel()) {
                         .padding(top = 8.dp)
                 ) {
                     PatientDetails(
-                        patient = patient,
+                        patient = uiState.patient,
                         modifier = Modifier
                             .weight(0.2f)
                             .fillMaxHeight()
@@ -75,8 +72,8 @@ fun DashboardScreen(vm: MainViewModel = hiltViewModel()) {
                     )
 
                     StatsSection(
-                        activityLogs = allLogs,
-                        selectedSession = selectedSession,
+                        activityLogs = uiState.activityLogs,
+                        selectedSession = uiState.selectedSessionType,
                         onSessionSelected = { vm.setSelectedSessionType(it) },
                         modifier = Modifier
                             .weight(0.8f)
