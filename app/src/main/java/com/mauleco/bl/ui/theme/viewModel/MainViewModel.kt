@@ -16,6 +16,12 @@ class MainViewModel @Inject constructor(
     private val repository: AppRepository
 ) : ViewModel() {
 
+    private val _isLoading = mutableStateOf(true)
+    val isLoading: State<Boolean> get() = _isLoading
+
+    private val _errorMessage = mutableStateOf<String?>(null)
+    val errorMessage: State<String?> get() = _errorMessage
+
     private val _patient = mutableStateOf<Patient?>(null)
     val patient: State<Patient?> = _patient
 
@@ -27,16 +33,22 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // Preload JSON data if DB is empty
-            repository.preloadDataIfEmpty()
+            try {
+                _isLoading.value = true
 
-            // Load patient
-            val loadedPatient = repository.getPatientById("d82315d2-5bda-4e11-be41-1924395c7f6b")
-            _patient.value = loadedPatient
+                // Make sure initial data is populated
+                repository.preloadDataIfEmpty()
 
-            // Load activity logs
-            val logs = repository.getAllActivityLogs()
-            _activityLogs.value = logs
+                val loadedPatient = repository.getPatientById("d82315d2-5bda-4e11-be41-1924395c7f6b")
+                _patient.value = loadedPatient
+
+                val logs = repository.getAllActivityLogs()
+                _activityLogs.value = logs
+            } catch (e: Exception) {
+                _errorMessage.value = e.message ?: "Unknown error occurred"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
